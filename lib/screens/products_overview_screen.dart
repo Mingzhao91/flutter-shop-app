@@ -12,12 +12,12 @@ enum FilterOptions {
   All,
 }
 
-class ProductsOverview extends StatefulWidget {
+class ProductsOverviewScreen extends StatefulWidget {
   @override
-  State<ProductsOverview> createState() => _ProductsOverviewState();
+  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
 
-class _ProductsOverviewState extends State<ProductsOverview> {
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavourites = false;
 
   @override
