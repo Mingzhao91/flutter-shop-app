@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../models/http_exception.dart';
 import './product.dart';
 
 class Products with ChangeNotifier {
@@ -12,7 +13,7 @@ class Products with ChangeNotifier {
 
   Uri getUrl({String id = ''}) {
     return Uri.parse(
-        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products${id == '' ? '/$id' : ''}.json');
+        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products${id == '' ? '' : '/$id'}.json');
   }
 
   List<Product> get items {
@@ -85,7 +86,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       await http.patch(
-        getUrl(),
+        getUrl(id: id),
         body: json.encode({
           'title': newProduct.title,
           'description': newProduct.description,
@@ -98,8 +99,20 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+
+    final response = await http.delete(getUrl(id: id));
+
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    // clear up the reference and let dart remove this object in memory
+    existingProduct = null;
   }
 }
