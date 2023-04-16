@@ -24,20 +24,18 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavouritesStatus(String token) async {
+  Future<void> toggleFavouritesStatus(String token, String userId) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
 
     final url = Uri.parse(
-        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
+        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/userFavourites/$userId/$id.json?auth=$token');
     try {
-      final response = await http.patch(
+      final response = await http.put(
         url,
         body: json.encode(
-          {
-            'isFavourite': isFavourite,
-          },
+          isFavourite,
         ),
       );
       // The http package only throws its own error for get and post requests if the server returns an error status code. for patch, put and delete, it doesn’t do that.
