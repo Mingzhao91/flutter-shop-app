@@ -19,23 +19,21 @@ class Product with ChangeNotifier {
     this.isFavourite = false,
   });
 
-  Uri getUrl({String id = ''}) {
-    return Uri.parse(
-        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products${id == '' ? '' : '/$id'}.json');
-  }
-
   void _setFavValue(bool newVal) {
     isFavourite = newVal;
     notifyListeners();
   }
 
-  Future<void> toggleFavouritesStatus() async {
+  Future<void> toggleFavouritesStatus(String token) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
+
+    final url = Uri.parse(
+        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
     try {
       final response = await http.patch(
-        getUrl(id: id),
+        url,
         body: json.encode(
           {
             'isFavourite': isFavourite,

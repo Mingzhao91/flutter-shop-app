@@ -13,8 +13,12 @@ class Products with ChangeNotifier {
 
   Uri getUrl({String id = ''}) {
     return Uri.parse(
-        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products${id == '' ? '' : '/$id'}.json');
+        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/products${id == '' ? '' : '/$id'}.json?auth=$authToken');
   }
+
+  final String authToken;
+
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     return [..._items];
