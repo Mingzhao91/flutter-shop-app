@@ -21,16 +21,17 @@ class OrderItem {
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
   final String authToken;
+  final String userId;
 
-  Orders(this.authToken, this._orders);
+  Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-  Uri getUrl({String id = ''}) {
+  Uri getUrl() {
     return Uri.parse(
-        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/orders${id == '' ? '' : '/$id'}.json?auth=$authToken');
+        'https://flutter-my-shop-1003c-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken');
   }
 
   Future<void> fetchAndSetOrders() async {
