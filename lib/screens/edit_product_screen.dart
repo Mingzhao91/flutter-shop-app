@@ -188,8 +188,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       decoration: InputDecoration(
                         labelText: 'Price',
                       ),
-                      textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
                       focusNode: _priceFocusNode,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context)
